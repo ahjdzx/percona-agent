@@ -86,11 +86,11 @@ func (w *PfsWorker) CollectData() ([]*PfsRow, error) {
 
 	query := "SELECT " +
 		"DIGEST, DIGEST_TEXT, COUNT_STAR, " +
-		"SUM_TIMER_WAIT, MIN_TIMER_WAIT, AVG_TIMER_WAIT, " +
-		"MAX_TIMER_WAIT, SUM_LOCK_TIME, SUM_ROWS_AFFECTED, " +
-		"SUM_ROWS_SENT, SUM_ROWS_EXAMINED, SUM_CREATED_TMP_DISK_TABLES, " +
-		"SUM_CREATED_TMP_TABLES, SUM_SELECT_FULL_JOIN, SUM_SELECT_SCAN, " +
-		"SUM_SORT_MERGE_PASSES, FIRST_SEEN, LAST_SEEN " +
+		"SUM_TIMER_WAIT, MIN_TIMER_WAIT, AVG_TIMER_WAIT, MAX_TIMER_WAIT, " +
+		"SUM_LOCK_TIME, SUM_ROWS_AFFECTED, SUM_ROWS_SENT, SUM_ROWS_EXAMINED, " +
+		"SUM_CREATED_TMP_DISK_TABLES, SUM_CREATED_TMP_TABLES, " +
+		"SUM_SELECT_FULL_JOIN, SUM_SELECT_SCAN,SUM_SORT_MERGE_PASSES, " +
+		"FIRST_SEEN, LAST_SEEN " +
 		"FROM performance_schema.events_statements_summary_by_digest"
 	rows, err := w.mysqlConn.DB().Query(query)
 	if err != nil {
@@ -105,9 +105,11 @@ func (w *PfsWorker) CollectData() ([]*PfsRow, error) {
 		row := &PfsRow{}
 		err := rows.Scan(
 			&row.Digest, &row.DigestText, &row.CountStar,
-			&row.SumTimerWait, &row.MinTimerWait, &row.AvgTimerWait, &row.MaxTimerWait, &row.SumLockTime,
-			&row.SumRowsAffected, &row.SumRowsSent, &row.SumRowsExamined, &row.SumCreatedTmpDiskTables, &row.SumCreatedTmpTables,
-			&row.SumSelectFullJoin, &row.SumSelectScan, &row.SumSortMergePasses, &row.FirstSeen, &row.LastSeen,
+			&row.SumTimerWait, &row.MinTimerWait, &row.AvgTimerWait, &row.MaxTimerWait,
+			&row.SumLockTime, &row.SumRowsAffected, &row.SumRowsSent, &row.SumRowsExamined,
+			&row.SumCreatedTmpDiskTables, &row.SumCreatedTmpTables,
+			&row.SumSelectFullJoin, &row.SumSelectScan, &row.SumSortMergePasses,
+			&row.FirstSeen, &row.LastSeen,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("rows.Scan error: %s: ", err)

@@ -122,7 +122,7 @@ func (m *Manager) Start() error {
 
 	// Start the slow log or perfomance schema (pfs) parser.
 	if err := m.start(config); err != nil {
-		m.logger.Error("Start pfs:", err)
+		m.logger.Error("Start:", err)
 		return nil
 	}
 
